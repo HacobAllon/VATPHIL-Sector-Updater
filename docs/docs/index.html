@@ -23,7 +23,7 @@
 
     .bg-image {
       position: fixed; inset: 0; z-index: 0;
-      background-image: url('docs/Image.png');
+      background-image: url('https://raw.githubusercontent.com/HacobAllon/VATPHIL-Updater/refs/heads/main/docs/Image.png');
       background-size: cover;
       background-position: center;
       filter: saturate(0.45) brightness(0.5);
@@ -155,8 +155,7 @@
 
 <nav>
   <a class="nav-logo" href="#">
-    <img src="docs/small.png" alt="VATPHIL"
-      onerror="this.src='https://raw.githubusercontent.com/HacobAllon/VATPHIL-Updater/refs/heads/main/docs/small.png'" />
+    <img src="https://raw.githubusercontent.com/HacobAllon/VATPHIL-Updater/refs/heads/main/docs/small.png" alt="VATPHIL" />
   </a>
   <div class="nav-links">
     <a href="#" class="nav-link">Docs</a>
@@ -169,9 +168,8 @@
     <div class="hero-left">
       <img
         class="hero-logo-img"
-        src="docs/large.png"
+        src="https://raw.githubusercontent.com/HacobAllon/VATPHIL-Updater/refs/heads/main/docs/large.png"
         alt="VATPHIL"
-        onerror="this.src='https://raw.githubusercontent.com/HacobAllon/VATPHIL-Updater/refs/heads/main/docs/large.png'"
       />
 
       <div class="hero-actions">
@@ -191,9 +189,8 @@
     <div class="hero-visual">
       <div class="mockup-frame">
         <img
-          src="docs/updater.png"
+          src="https://raw.githubusercontent.com/HacobAllon/VATPHIL-Updater/refs/heads/main/docs/updater.png"
           alt="VATPHIL Updater"
-          onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/HacobAllon/VATPHIL-Updater/refs/heads/main/docs/updater.png'"
         />
       </div>
       <div class="mockup-glow"></div>
@@ -204,14 +201,6 @@
 
 <script>
   (async () => {
-    // Fix background image if local path fails
-    const bgEl = document.querySelector('.bg-image');
-    const testImg = new Image();
-    testImg.onerror = () => {
-      bgEl.style.backgroundImage = "url('https://raw.githubusercontent.com/HacobAllon/VATPHIL-Updater/refs/heads/main/docs/Image.png')";
-    };
-    testImg.src = 'docs/Image.png';
-
     const btn = document.getElementById('download-btn');
     const versionBadge = document.querySelector('.ver-badge.stable');
     try {
