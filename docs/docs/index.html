@@ -168,7 +168,8 @@
 
 <nav>
   <a class="nav-logo" href="#">
-    <img src="docs/small.png" alt="VATPHIL" />
+    <img src="docs/small.png" alt="VATPHIL"
+      onerror="this.src='https://raw.githubusercontent.com/HacobAllon/VATPHIL-Sector-Updater/refs/heads/main/docs/small.png'" />
   </a>
   <div class="nav-links">
     <a href="#" class="nav-link">Docs</a>
@@ -188,6 +189,7 @@
         class="hero-logo-img"
         src="docs/large.png"
         alt="VATPHIL"
+        onerror="this.src='https://raw.githubusercontent.com/HacobAllon/VATPHIL-Sector-Updater/refs/heads/main/docs/large.png'"
       />
 
       <p class="hero-desc">
@@ -202,18 +204,17 @@
         </a>
       </div>
       <div class="version-strip">
-        <span class="ver-badge stable">v0.8.10 Stable</span>
+        <span class="ver-badge stable">v0.8.10</span>
         <span class="ver-badge label">Windows</span>
-        <span class="ver-badge label">Free · Open Source</span>
       </div>
     </div>
 
     <div class="hero-visual">
       <div class="mockup-frame">
         <img
-          src="docs/Image.png"
+          src="docs/updater.png"
           alt="VATPHIL Updater"
-          onerror="this.parentElement.style.display='none'"
+          onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/HacobAllon/VATPHIL-Sector-Updater/refs/heads/main/docs/updater.png'"
         />
       </div>
       <div class="mockup-glow"></div>
@@ -224,6 +225,14 @@
 
 <script>
   (async () => {
+    // Fix background image if local path fails
+    const bgEl = document.querySelector('.bg-image');
+    const testImg = new Image();
+    testImg.onerror = () => {
+      bgEl.style.backgroundImage = "url('https://raw.githubusercontent.com/HacobAllon/VATPHIL-Sector-Updater/refs/heads/main/docs/Image.png')";
+    };
+    testImg.src = 'docs/Image.png';
+
     const btn = document.getElementById('download-btn');
     const versionBadge = document.querySelector('.ver-badge.stable');
     try {
