@@ -64,19 +64,6 @@
       gap: 80px; align-items: center;
     }
 
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-family: 'Space Mono', monospace;
-      font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--muted2); border: 1px solid var(--border);
-      padding: 6px 14px; border-radius: 20px; margin-bottom: 28px;
-      background: rgba(255,255,255,0.03);
-    }
-    .eyebrow-dot {
-      width: 5px; height: 5px; border-radius: 50%;
-      background: var(--red); box-shadow: 0 0 6px var(--red); flex-shrink: 0;
-    }
-
     .hero-logo-img {
       display: block;
       height: clamp(70px, 9vw, 120px);
@@ -169,44 +156,35 @@
 <nav>
   <a class="nav-logo" href="#">
     <img src="docs/small.png" alt="VATPHIL"
-      onerror="this.src='https://raw.githubusercontent.com/HacobAllon/VATPHIL-Sector-Updater/refs/heads/main/docs/small.png'" />
+      onerror="this.src='https://raw.githubusercontent.com/HacobAllon/VATPHIL-Updater/refs/heads/main/docs/small.png'" />
   </a>
   <div class="nav-links">
     <a href="#" class="nav-link">Docs</a>
-    <a href="https://github.com/HacobAllon/VATPHIL-Sector-Updater" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/HacobAllon/VATPHIL-Updater" class="nav-link" target="_blank" rel="noopener">GitHub</a>
   </div>
 </nav>
 
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-left">
-      <div class="hero-eyebrow">
-        <div class="eyebrow-dot"></div>
-        Philippines vACC · VATSIM
-      </div>
-
       <img
         class="hero-logo-img"
         src="docs/large.png"
         alt="VATPHIL"
-        onerror="this.src='https://raw.githubusercontent.com/HacobAllon/VATPHIL-Sector-Updater/refs/heads/main/docs/large.png'"
+        onerror="this.src='https://raw.githubusercontent.com/HacobAllon/VATPHIL-Updater/refs/heads/main/docs/large.png'"
       />
 
-      <p class="hero-desc">
-        An open-source <code>sector file manager</code> for the VATPHIL vACC. Keeps your EuroScope setup perfectly in sync with the latest AIRAC data.
-      </p>
       <div class="hero-actions">
-        <a id="download-btn" href="https://github.com/HacobAllon/VATPHIL-Sector-Updater/releases" class="btn-primary" target="_blank" rel="noopener">
+        <a id="download-btn" href="https://github.com/HacobAllon/VATPHIL-Updater/releases" class="btn-primary" target="_blank" rel="noopener">
           ⬇ Download Latest
         </a>
-        <a href="https://github.com/HacobAllon/VATPHIL-Sector-Updater" class="btn-secondary" target="_blank" rel="noopener">
+        <a href="https://github.com/HacobAllon/VATPHIL-Updater" class="btn-secondary" target="_blank" rel="noopener">
           ◈ View on GitHub
         </a>
       </div>
       <div class="version-strip">
-        <span class="ver-badge stable">v0.8.10 Stable</span>
-        <span class="ver-badge label">Windows · macOS</span>
-        <span class="ver-badge label">Free · Open Source</span>
+        <span class="ver-badge stable">v0.8.10</span>
+        <span class="ver-badge label">Windows</span>
       </div>
     </div>
 
@@ -215,7 +193,7 @@
         <img
           src="docs/updater.png"
           alt="VATPHIL Updater"
-          onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/HacobAllon/VATPHIL-Sector-Updater/refs/heads/main/docs/updater.png'"
+          onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/HacobAllon/VATPHIL-Updater/refs/heads/main/docs/updater.png'"
         />
       </div>
       <div class="mockup-glow"></div>
@@ -230,14 +208,14 @@
     const bgEl = document.querySelector('.bg-image');
     const testImg = new Image();
     testImg.onerror = () => {
-      bgEl.style.backgroundImage = "url('https://raw.githubusercontent.com/HacobAllon/VATPHIL-Sector-Updater/refs/heads/main/docs/Image.png')";
+      bgEl.style.backgroundImage = "url('https://raw.githubusercontent.com/HacobAllon/VATPHIL-Updater/refs/heads/main/docs/Image.png')";
     };
     testImg.src = 'docs/Image.png';
 
     const btn = document.getElementById('download-btn');
     const versionBadge = document.querySelector('.ver-badge.stable');
     try {
-      const res = await fetch('https://api.github.com/repos/HacobAllon/VATPHIL-Sector-Updater/releases/latest');
+      const res = await fetch('https://api.github.com/repos/HacobAllon/VATPHIL-Updater/releases/latest');
       if (!res.ok) throw new Error('API error');
       const release = await res.json();
       // Prefer .exe, then .zip, then first asset, else release page
@@ -253,7 +231,7 @@
         btn.href = release.html_url;
       }
       if (versionBadge && release.tag_name) {
-        versionBadge.textContent = release.tag_name + ' Stable';
+        versionBadge.textContent = release.tag_name;
       }
     } catch (e) {
       // Falls back to the releases page link already on the button
