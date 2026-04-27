@@ -161,7 +161,7 @@
     <img src="small.png" alt="VATPHIL" />
   </a>
   <div class="nav-links">
-    <a href="#" class="nav-link">Docs</a>
+    <a href="docs.html" class="nav-link">Docs</a>
     <a href="https://github.com/HacobAllon/VATPHIL-Updater" class="nav-link" target="_blank" rel="noopener">GitHub</a>
   </div>
 </nav>
@@ -207,7 +207,7 @@
     const btn = document.getElementById('download-btn');
     const versionBadge = document.querySelector('.ver-badge.stable');
     try {
-      const res = await fetch('https://api.github.com/repos/HacobAllon/VATPHIL-Updater/releases/latest');
+      const res = await fetch('https://api.github.com/repos/HacobAllon/VATPHIL-Sector-Updater/releases/latest');
       if (!res.ok) throw new Error('API error');
       const release = await res.json();
       const asset =

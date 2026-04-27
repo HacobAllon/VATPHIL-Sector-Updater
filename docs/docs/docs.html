@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VATPHIL Updater — Docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.13);
+      --blue: #1e5ef3;
+      --blue2: #5b8ef7;
+      --green: #22c55e;
+      --text: #eef0f8;
+      --muted: #3d4a6e;
+      --muted2: #6b7a9e;
+      --surface: rgba(255,255,255,0.03);
+      --surface2: rgba(255,255,255,0.06);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body { min-height: 100vh; font-family: 'Outfit', sans-serif; color: var(--text); background: #03040a; }
+
+    .bg-image {
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url('Image.png');
+      background-size: cover; background-position: center;
+      filter: saturate(0.3) brightness(0.25);
+    }
+    .bg-overlay {
+      position: fixed; inset: 0; z-index: 1;
+      background: linear-gradient(to bottom, rgba(3,4,10,0.7) 0%, rgba(3,4,10,0.5) 50%, rgba(3,4,10,0.9) 100%);
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 64px;
+      background: rgba(3,4,10,0.6);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo img { height: 34px; width: auto; display: block; }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-link {
+      font-size: 13px; font-weight: 500; color: var(--muted2);
+      text-decoration: none; padding: 7px 16px; border-radius: 8px;
+      border: 1px solid transparent; transition: all 0.15s; letter-spacing: 0.04em;
+    }
+    .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.05); border-color: var(--border); }
+    .nav-link.active { color: var(--text); background: rgba(255,255,255,0.05); border-color: var(--border); }
+
+    .page {
+      position: relative; z-index: 2;
+      max-width: 780px; margin: 0 auto;
+      padding: 112px 48px 80px;
+    }
+
+    .page-header { margin-bottom: 56px; }
+    .page-eyebrow {
+      font-family: 'Space Mono', monospace; font-size: 11px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--blue2); margin-bottom: 16px; display: block;
+    }
+    .page-title {
+      font-size: clamp(32px, 5vw, 48px); font-weight: 800;
+      line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 16px;
+    }
+    .page-subtitle { font-size: 17px; color: var(--muted2); line-height: 1.7; }
+
+    .divider { height: 1px; background: var(--border); margin: 48px 0; }
+
+    .section { margin-bottom: 48px; }
+    .section-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 8px;
+      background: rgba(30,94,243,0.15); border: 1px solid rgba(30,94,243,0.3);
+      font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700;
+      color: var(--blue2); flex-shrink: 0; margin-right: 14px;
+    }
+    .section-heading { display: flex; align-items: center; margin-bottom: 20px; }
+    .section-heading h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+
+    .steps { display: flex; flex-direction: column; gap: 12px; }
+    .step {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 18px 20px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; transition: border-color 0.15s;
+    }
+    .step:hover { border-color: var(--border2); }
+    .step-num {
+      width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0;
+      background: rgba(30,94,243,0.12); border: 1px solid rgba(30,94,243,0.25);
+      font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+      color: var(--blue2); display: flex; align-items: center; justify-content: center;
+      margin-top: 1px;
+    }
+    .step-content { flex: 1; }
+    .step-title { font-size: 15px; font-weight: 600; margin-bottom: 5px; }
+    .step-desc { font-size: 14px; color: var(--muted2); line-height: 1.65; }
+    .step-desc code {
+      font-family: 'Space Mono', monospace; font-size: 12px;
+      color: var(--blue2); background: rgba(30,94,243,0.1);
+      padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(30,94,243,0.2);
+    }
+
+    .callout {
+      padding: 16px 20px; border-radius: 12px; border-left: 3px solid;
+      margin: 20px 0; font-size: 14px; line-height: 1.7;
+    }
+    .callout.info { background: rgba(30,94,243,0.07); border-color: var(--blue); color: var(--muted2); }
+    .callout.info strong { color: var(--blue2); }
+    .callout.success { background: rgba(34,197,94,0.07); border-color: var(--green); color: var(--muted2); }
+    .callout.success strong { color: var(--green); }
+
+    .faq { display: flex; flex-direction: column; gap: 8px; }
+    .faq-item { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .faq-q {
+      width: 100%; background: var(--surface); border: none; cursor: pointer;
+      padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
+      font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600;
+      color: var(--text); text-align: left; transition: background 0.15s;
+    }
+    .faq-q:hover { background: var(--surface2); }
+    .faq-q .arrow { font-size: 12px; color: var(--muted2); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item.open .faq-q .arrow { transform: rotate(180deg); }
+    .faq-a {
+      font-size: 14px; color: var(--muted2); line-height: 1.75;
+      max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;
+      padding: 0 20px; background: var(--surface);
+    }
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 20px 16px; }
+
+    .btn-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; color: var(--muted2); text-decoration: none;
+      padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--surface); transition: all 0.15s; margin-bottom: 40px;
+    }
+    .btn-back:hover { color: var(--text); border-color: var(--border2); background: var(--surface2); }
+
+    @media (max-width: 600px) {
+      .page { padding: 96px 24px 60px; }
+      nav { padding: 0 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-image"></div>
+<div class="bg-overlay"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img src="small.png" alt="VATPHIL" />
+  </a>
+  <div class="nav-links">
+    <a href="docs.html" class="nav-link active">Docs</a>
+    <a href="https://github.com/HacobAllon/VATPHIL-Updater" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <a href="index.html" class="btn-back">← Back</a>
+
+  <div class="page-header">
+    <span class="page-eyebrow">Documentation</span>
+    <h1 class="page-title">Getting Started</h1>
+    <p class="page-subtitle">Everything you need to install and use the VATPHIL Updater to keep your EuroScope sector files up to date.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Installation -->
+  <div class="section">
+    <div class="section-heading">
+      <span class="section-num">1</span>
+      <h2>Installation</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Download the installer</div>
+          <div class="step-desc">Head to the <a href="index.html" style="color:var(--blue2);text-decoration:none;">home page</a> and click <strong>Download</strong>. The <code>.exe</code> file will download automatically.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Run the executable</div>
+          <div class="step-desc">Double-click <code>VATPHIL-Updater.exe</code> to launch the app. Windows may show a SmartScreen warning — click <strong>More info → Run anyway</strong>.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Set your installation directory</div>
+          <div class="step-desc">Click <strong>Browse Folder</strong> and select the folder where your sector files are located (e.g. <code>Desktop\VATPHIL Sector</code>).</div>
+        </div>
+      </div>
+    </div>
+    <div class="callout info" style="margin-top:20px;">
+      <strong>Note:</strong> The updater creates a folder called <code>VATPHIL-Updater</code>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Using the Updater -->
+  <div class="section">
+    <div class="section-heading">
+      <span class="section-num">2</span>
+      <h2>Using the Updater</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Select the download location</div>
+          <div class="step-desc">Remember where you place it as it contains all the important files to get started.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">After the files have been downloaded</div>
+          <div class="step-desc">Enter your VATSIM Password and ACARS Code.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Press Apply!</div>
+          <div class="step-desc">You can start controlling!</div>
+        </div>
+      </div>
+    </div>
+    <div class="callout success" style="margin-top:20px;">
+      <strong>Done!</strong> The updater will show a green status when your installation matches the latest AIRAC data.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FAQ -->
+  <div class="section">
+    <div class="section-heading">
+      <span class="section-num">3</span>
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    <div class="faq">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Why does Windows block the app from running?
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-a">The updater is not code-signed, so Windows may flag it. Click <strong>More info</strong> then <strong>Run anyway</strong> to proceed.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How often should I run the updater?
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-a">Run it once per AIRAC cycle (every 28 days). The updater will tell you if you're already on the latest version. Check for announcements in the #airac channel in the Discord.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          The status shows "Missing Files" — what do I do?
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-a">This means some sector files are missing from your directory. Click <strong>Repair Files</strong> to re-download them. Make sure your installation directory is set correctly first.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Is my VATSIM password stored securely?
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-a">Yes. Credentials are stored using the Windows Credential Manager (<code>keyring</code>), the same mechanism used by apps like Git and VS Code. Your password is never stored in plain text.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    item.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
