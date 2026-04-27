@@ -103,12 +103,13 @@
     }
     .btn-secondary {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 24px; background: rgba(255,255,255,0.05); color: var(--muted2);
+      padding: 14px 24px; background: rgba(255,255,255,0.12); color: var(--text);
       font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500;
       letter-spacing: 0.02em; border-radius: 12px; text-decoration: none;
-      border: 1px solid var(--border2); cursor: pointer; transition: all 0.15s;
+      border: 1px solid rgba(255,255,255,0.2); cursor: pointer; transition: all 0.15s;
+      backdrop-filter: blur(8px);
     }
-    .btn-secondary:hover { color: var(--text); background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.22); }
+    .btn-secondary:hover { color: var(--text); background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.35); }
 
     .version-strip { display: flex; align-items: center; gap: 10px; margin-top: 32px; flex-wrap: wrap; }
     .ver-badge { font-family: 'Space Mono', monospace; font-size: 11px; padding: 5px 12px; border-radius: 6px; letter-spacing: 0.08em; }
@@ -117,9 +118,11 @@
 
     .hero-visual { position: relative; }
     .mockup-frame {
-      border-radius: 16px; border: 1px solid var(--border2); overflow: hidden;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 40px 80px rgba(0,0,0,0.8), 0 0 60px rgba(30,94,243,0.08);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(30,94,243,0.1);
       animation: floatUp 0.8s cubic-bezier(0.16,1,0.3,1) both 0.2s;
+      width: 130%;
+      margin-left: -15%;
     }
     .mockup-frame img { display: block; width: 100%; height: auto; }
     .mockup-glow {
@@ -207,23 +210,27 @@
       const res = await fetch('https://api.github.com/repos/HacobAllon/VATPHIL-Updater/releases/latest');
       if (!res.ok) throw new Error('API error');
       const release = await res.json();
-      // Prefer .exe, then .zip, then first asset, else release page
       const asset =
         release.assets.find(a => a.name.endsWith('.exe')) ||
         release.assets.find(a => a.name.endsWith('.zip')) ||
         release.assets[0];
-      if (asset) {
-        btn.href = asset.browser_download_url;
-        btn.removeAttribute('target');
-        btn.setAttribute('download', asset.name);
-      } else {
-        btn.href = release.html_url;
-      }
+
+      const downloadUrl = asset ? asset.browser_download_url : release.html_url;
+
+      btn.removeAttribute('href');
+      btn.removeAttribute('target');
+      btn.removeAttribute('rel');
+      btn.style.cursor = 'pointer';
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = downloadUrl;
+      });
+
       if (versionBadge && release.tag_name) {
         versionBadge.textContent = release.tag_name;
       }
     } catch (e) {
-      // Falls back to the releases page link already on the button
+      // Falls back to releases page
     }
   })();
 </script>
