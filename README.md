@@ -1,3 +1,7 @@
+# Known Bugs
+
+- When logging in, you will need to press try again.
+
 # VATPHIL Updater
 
 The VATPHIL Updater is a desktop application that automatically downloads, installs, and keeps your sector files up to date. It handles everything from first-time installation to AIRAC cycle updates.
