@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VATPHIL App — Changelog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --border:    rgba(255,255,255,0.07);
+      --border2:   rgba(255,255,255,0.13);
+      --blue:      #1e5ef3;
+      --blue2:     #5b8ef7;
+      --green:     #22c55e;
+      --amber:     #d97706;
+      --red:       #e8394d;
+      --text:      #eef0f8;
+      --muted:     #3d4a6e;
+      --muted2:    #6b7a9e;
+      --surface:   rgba(255,255,255,0.03);
+      --surface2:  rgba(255,255,255,0.06);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body { min-height: 100vh; font-family: 'Outfit', sans-serif; color: var(--text); background: #03040a; }
+
+    .bg-image {
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url('Image.png');
+      background-size: cover; background-position: center;
+      filter: saturate(0.3) brightness(0.25);
+    }
+    .bg-overlay {
+      position: fixed; inset: 0; z-index: 1;
+      background: linear-gradient(to bottom, rgba(3,4,10,0.7) 0%, rgba(3,4,10,0.5) 50%, rgba(3,4,10,0.9) 100%);
+    }
+
+    /* ── Nav (matches docs.html) ─────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 64px;
+      background: rgba(3,4,10,0.6);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo img { height: 34px; width: auto; display: block; }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-link {
+      font-size: 13px; font-weight: 500; color: var(--muted2);
+      text-decoration: none; padding: 7px 16px; border-radius: 8px;
+      border: 1px solid transparent; transition: all 0.15s; letter-spacing: 0.04em;
+    }
+    .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.05); border-color: var(--border); }
+    .nav-link.active { color: var(--text); background: rgba(255,255,255,0.05); border-color: var(--border); }
+
+    /* ── Page layout ─────────────────────────────────────────────────── */
+    .page {
+      position: relative; z-index: 2;
+      max-width: 1160px; margin: 0 auto;
+      padding: 112px 48px 80px;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 56px;
+    }
+    .page-header {
+      grid-column: 1 / -1;
+      margin-bottom: 24px;
+    }
+    .page-eyebrow {
+      font-family: 'Space Mono', monospace; font-size: 11px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--blue2); margin-bottom: 16px; display: block;
+    }
+    .page-title {
+      font-size: clamp(32px, 5vw, 48px); font-weight: 800;
+      line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 16px;
+    }
+    .page-subtitle { font-size: 17px; color: var(--muted2); line-height: 1.7; max-width: 640px; }
+
+    .btn-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; color: var(--muted2); text-decoration: none;
+      padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--surface); transition: all 0.15s; margin-bottom: 32px;
+    }
+    .btn-back:hover { color: var(--text); border-color: var(--border2); background: var(--surface2); }
+
+    /* ── Sticky version sidebar ──────────────────────────────────────── */
+    .versions-nav {
+      position: sticky; top: 112px;
+      align-self: start;
+      max-height: calc(100vh - 140px);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+    .versions-nav-group { margin-bottom: 24px; }
+    .versions-nav-group:last-child { margin-bottom: 0; }
+    .versions-nav-label {
+      font-family: 'Space Mono', monospace; font-size: 10px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 10px;
+    }
+    .versions-nav a {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 12px; border-radius: 8px;
+      font-size: 13px; font-weight: 500; color: var(--muted2);
+      text-decoration: none; border: 1px solid transparent;
+      transition: all 0.15s; margin-bottom: 2px;
+    }
+    .versions-nav a:hover { color: var(--text); background: var(--surface); }
+    .versions-nav a.active {
+      color: var(--text); background: var(--surface);
+      border-color: var(--border);
+    }
+    .versions-nav a .tick {
+      font-family: 'Space Mono', monospace; font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* ── Track sections (AIRAC / App) ───────────────────────────────── */
+    .versions { display: flex; flex-direction: column; gap: 72px; min-width: 0; }
+    .track { scroll-margin-top: 88px; }
+    .track-header { margin-bottom: 40px; }
+    .track-eyebrow {
+      font-family: 'Space Mono', monospace; font-size: 11px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--blue2); margin-bottom: 12px; display: block;
+    }
+    .track-title {
+      font-size: 32px; font-weight: 800; letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .track-subtitle { font-size: 15px; color: var(--muted2); line-height: 1.65; max-width: 620px; }
+
+    /* ── Version entries ─────────────────────────────────────────────── */
+    .version { scroll-margin-top: 88px; margin-bottom: 48px; }
+    .version:last-child { margin-bottom: 0; }
+
+    .version-header {
+      display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .version-number {
+      font-size: 32px; font-weight: 700; letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: underline; text-decoration-color: var(--text);
+      text-decoration-thickness: 2px; text-underline-offset: 6px;
+    }
+    .version-date {
+      font-size: 20px; font-weight: 400; color: var(--muted2);
+      letter-spacing: -0.01em;
+    }
+    .version-date::before { content: "— "; color: var(--muted2); }
+    .version-badge {
+      font-size: 12px; font-weight: 600;
+      padding: 2px 12px; border-radius: 999px;
+      align-self: center;
+    }
+    .version-badge.latest { color: var(--green); border: 1px solid var(--green); }
+    .version-badge.beta   { color: var(--amber); border: 1px solid var(--amber); }
+    .version-badge.app    { color: var(--blue2); border: 1px solid var(--blue2); }
+
+    .section { margin-bottom: 32px; }
+    .section:last-child { margin-bottom: 0; }
+    .section-name {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
+      color: var(--text); margin-bottom: 14px;
+    }
+
+    /* Flat list rows — no per-entry card, tag pill + body text only. */
+    .entry-list { display: flex; flex-direction: column; }
+    .entry {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 20px;
+      align-items: baseline;
+      padding: 10px 0;
+      font-size: 15px; line-height: 1.6;
+    }
+    .entry > .body { color: var(--text); }
+    .entry > .body strong { color: var(--text); font-weight: 600; }
+    .entry code {
+      font-family: 'Space Mono', monospace; font-size: 12.5px;
+      color: var(--text); background: rgba(255,255,255,0.06);
+      padding: 2px 7px; border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    .entry a { color: var(--blue2); text-decoration: none; border-bottom: 1px dashed rgba(91,142,247,0.4); }
+    .entry a:hover { border-bottom-style: solid; }
+
+    /* Pill-shaped tag — outlined ring, not a filled block. */
+    .tag {
+      justify-self: start; align-self: baseline;
+      font-size: 12px; font-weight: 500;
+      padding: 3px 12px; border-radius: 999px;
+      border: 1px solid; background: transparent;
+      line-height: 1.4; text-transform: none; letter-spacing: 0;
+    }
+    .tag.added   { color: var(--green); border-color: var(--green); }
+    .tag.fixed   { color: #a78bfa;      border-color: #a78bfa; }
+    .tag.changed { color: var(--amber); border-color: var(--amber); }
+    .tag.removed { color: var(--muted2); border-color: var(--border2); }
+    .tag.note    { color: var(--muted2); border-color: var(--border2); }
+
+    /* ── Responsive ──────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .page { grid-template-columns: 1fr; gap: 32px; padding-top: 96px; }
+      .versions-nav {
+        position: static; max-height: none; padding-right: 0;
+        display: flex; flex-wrap: wrap; gap: 6px;
+      }
+      .versions-nav-label { width: 100%; }
+      .versions-nav a { flex: 0 0 auto; padding: 6px 12px; }
+      .versions-nav a .tick { display: none; }
+    }
+    @media (max-width: 600px) {
+      .page { padding: 96px 24px 60px; }
+      nav { padding: 0 24px; }
+      .version-number { font-size: 26px; }
+      .version-date { font-size: 16px; }
+      .entry { grid-template-columns: 1fr; gap: 6px; padding: 8px 0 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-image"></div>
+<div class="bg-overlay"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img src="small.png" alt="VATPHIL" />
+  </a>
+  <div class="nav-links">
+    <a href="docs.html"      class="nav-link">Docs</a>
+    <a href="changelog.html" class="nav-link active">Changelog</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="page-header">
+    <a href="index.html" class="btn-back">← Back</a>
+    <span class="page-eyebrow">Release Notes</span>
+    <h1 class="page-title">Changelog</h1>
+    <p class="page-subtitle">
+      What's new in each AIRAC cycle and VATPHIL app release. Newest first.
+    </p>
+  </div>
+
+  <!--
+    ── SIDEBAR + MAIN CONTENT ARE FILLED BY changelog.js ───────────────
+    The page reads ./CHANGELOG.md (the same one the desktop app pulls
+    from the Worker), parses each version + entry, and renders the
+    tagged rows below. To update the changelog you only edit
+    CHANGELOG.md — no HTML editing needed.
+
+    KEEP docs/CHANGELOG.md IN SYNC with the repo root CHANGELOG.md
+    (or point your deploy pipeline to copy it into docs/).
+
+    Format (see CHANGELOG.md itself for a live example):
+      AIRAC 2608:             ← starts a new sector-files version
+      AIRAC 2608 Beta:        ← same, marked as the Beta channel
+      Updater: 0.10.9         ← starts a new app version (also accepts "App 0.10.9")
+
+      **General**             ← subsection heading inside the version
+
+      - Added: something new
+      - Fixed: a bug that…
+      - Changed: something…
+      - Removed: something…
+      - A plain bullet with no verb prefix → renders untagged
+
+      Any non-bullet paragraph under a section becomes a "Note" row.
+
+    Inline `code`, **bold**, [links](url), and bare https:// URLs are
+    all rendered as markdown.
+  -->
+  <aside class="versions-nav" id="versions-nav" aria-label="Versions"></aside>
+  <main class="versions" id="versions-main"></main>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────────────
+   Changelog auto-generator
+
+   Reads ./CHANGELOG.md, parses it into a tracks → versions → sections
+   → entries tree, and renders the same DOM the previous hardcoded page
+   used — so all existing CSS classes (.version, .entry, .tag.added etc)
+   continue to work unchanged.
+
+   Deliberately dependency-free: this is a single static page, adding
+   a markdown library would blow the budget for a few lines of code.
+   ───────────────────────────────────────────────────────────────────── */
+
+(async function () {
+  const navEl  = document.getElementById('versions-nav');
+  const mainEl = document.getElementById('versions-main');
+
+  // ── 1. Fetch the changelog source ────────────────────────────────
+  let raw;
+  try {
+    const res = await fetch('CHANGELOG.md', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    raw = await res.text();
+  } catch (err) {
+    mainEl.innerHTML = `
+      <div class="track">
+        <p style="color:var(--muted2);font-size:15px;line-height:1.7;">
+          Couldn't load the changelog (${escapeHtml(err.message)}).
+          Please refresh, or check back in a moment.
+        </p>
+      </div>`;
+    return;
+  }
+
+  // ── 2. Parse markdown into structured tracks ─────────────────────
+  const model = parseChangelog(raw);
+
+  // ── 3. Render sidebar + main ─────────────────────────────────────
+  renderSidebar(navEl, model);
+  renderMain(mainEl, model);
+
+  // ── 4. Wire the scroll-spy so the sidebar highlights the current
+  //      version, same behaviour as before the auto-gen switch.
+  const links = Array.from(navEl.querySelectorAll('a'));
+  const byId  = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const io = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter(e => e.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (visible.length === 0) return;
+    const id = visible[0].target.id;
+    links.forEach(a => a.classList.toggle('active', a === byId.get(id)));
+  }, { rootMargin: '-88px 0px -66% 0px', threshold: 0 });
+  document.querySelectorAll('.version').forEach(v => io.observe(v));
+
+  // If the URL loaded with a hash (e.g. from an in-page link), the
+  // fetch delay meant the target didn't exist yet — jump to it now.
+  if (location.hash) {
+    const t = document.getElementById(location.hash.slice(1));
+    if (t) t.scrollIntoView();
+  }
+})();
+
+
+/* ── Parser ────────────────────────────────────────────────────────── */
+
+function parseChangelog(raw) {
+  // Track layout mirrors the two-column split we ship: AIRAC on one side,
+  // App on the other. Each track is a { header, versions: [] } bag.
+  const tracks = {
+    sector: { id: 'track-sector', eyebrow: 'Sector Files · AIRAC Cycles',
+              title: 'AIRAC', versions: [] },
+    app:    { id: 'track-app',    eyebrow: 'Desktop App · Updater',
+              title: 'VATPHIL App', versions: [] },
+  };
+
+  let version = null;   // current version we're appending sections/entries to
+  let section = null;   // current subsection (e.g. "General")
+
+  // Ensure entries appearing before an explicit **Section** get a home.
+  const ensureSection = (name) => {
+    if (!version) return null;
+    if (section && (name == null || section.name === name)) return section;
+    section = { name: name || 'Changes', entries: [] };
+    version.sections.push(section);
+    return section;
+  };
+
+  const lines = raw.replace(/\r\n/g, '\n').split('\n');
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) continue;
+
+    // ── Version header: "AIRAC 2608", "AIRAC 2608 Beta:", … ─────────
+    let m = line.match(/^AIRAC\s+(\d+(?:\.\d+)?)(?:\s+(Beta|BETA|beta))?\s*:?\s*$/);
+    if (m) {
+      version = newVersion({
+        track: 'sector',
+        number: 'AIRAC ' + m[1] + (m[2] ? ' Beta' : ''),
+        badge: m[2] ? 'beta' : null,
+        id: 'airac-' + m[1].replace('.', '-') + (m[2] ? '-beta' : ''),
+      });
+      tracks.sector.versions.push(version);
+      section = null;
+      continue;
+    }
+
+    // ── App / Updater version header ─────────────────────────────────
+    // Accepts: "Updater: 0.10.9", "Updater 0.10.9", "App 0.10.9",
+    //          "VATPHIL App 0.10.9", "v0.10.9". Trailing "Beta" allowed.
+    m = line.match(/^(?:Updater|App|VATPHIL\s+App|v)\s*:?\s*(\d+(?:\.\d+)+)(?:\s+(Beta|BETA|beta))?\s*:?\s*(.*)$/i);
+    if (m && !/^\*\*/.test(line)) {
+      const trailing = (m[3] || '').replace(/^[—-]+\s*/, '').trim();
+      version = newVersion({
+        track: 'app',
+        number: 'v' + m[1] + (m[2] ? ' Beta' : ''),
+        badge: m[2] ? 'beta' : null,
+        subtitle: trailing || null,
+        id: 'app-' + m[1].replace(/\./g, '-') + (m[2] ? '-beta' : ''),
+      });
+      tracks.app.versions.push(version);
+      section = null;
+      continue;
+    }
+
+    // ── Section heading: **General**, **Sector Files**, … ───────────
+    m = line.match(/^\*\*(.+?)\*\*\s*:?\s*$/);
+    if (m) {
+      if (!version) continue;   // orphan heading before any version, ignore
+      section = { name: m[1].trim(), entries: [] };
+      version.sections.push(section);
+      continue;
+    }
+
+    // Everything below needs a current version to attach to.
+    if (!version) continue;
+
+    // ── Bulleted entry: "- Added: something" ────────────────────────
+    m = line.match(/^[-*]\s+(.*)$/);
+    if (m) {
+      const body = m[1];
+      // Bullets default to "changed" — the typical convention for an
+      // untagged bullet in a changelog. Non-bullet prose defaults to
+      // "note" (see below) because it's usually documentation, not a
+      // change entry.
+      const { tag, text } = classifyEntry(body, 'changed');
+      ensureSection().entries.push({ tag, text });
+      continue;
+    }
+
+    // ── Any other prose line → untagged note row. Consecutive lines
+    //    stay separate entries; that mirrors how the source is written
+    //    (each "sentence line" reads standalone).
+    const { tag, text } = classifyEntry(line, /*defaultTag*/'note');
+    ensureSection().entries.push({ tag, text });
+  }
+
+  // Mark the newest version in each track as "latest" unless it's already
+  // been given a specific badge (Beta releases keep their beta badge).
+  for (const t of Object.values(tracks)) {
+    for (const v of t.versions) {
+      if (!v.badge) { v.badge = 'latest'; break; }
+    }
+  }
+
+  return tracks;
+}
+
+function newVersion(fields) {
+  return { sections: [], ...fields };
+}
+
+// Detect a leading verb prefix and split it off. Everything else falls
+// through as an untagged bullet ('none') or a 'note' for prose.
+function classifyEntry(text, defaultTag = 'none') {
+  const rules = [
+    { tag: 'added',   re: /^added\b[:\s\-–—]\s*/i },
+    { tag: 'fixed',   re: /^(fixed|fix)\b[:\s\-–—]\s*/i },
+    { tag: 'changed', re: /^(changed|updated|improved)\b[:\s\-–—]\s*/i },
+    { tag: 'removed', re: /^(removed|deleted)\b[:\s\-–—]\s*/i },
+    { tag: 'note',    re: /^(note|notice)\b[:\s\-–—]\s*/i },
+  ];
+  for (const r of rules) {
+    if (r.re.test(text)) {
+      return { tag: r.tag, text: text.replace(r.re, '') };
+    }
+  }
+  // "Bug Fixes" without a prefix → treat as fixed.
+  if (/^bug fixes?\b/i.test(text)) return { tag: 'fixed', text };
+  return { tag: defaultTag, text };
+}
+
+
+/* ── Renderers ─────────────────────────────────────────────────────── */
+
+function renderSidebar(el, tracks) {
+  const groups = [
+    { label: 'Sector Files', versions: tracks.sector.versions },
+    { label: 'VATPHIL App',  versions: tracks.app.versions    },
+  ];
+  el.innerHTML = groups.filter(g => g.versions.length).map((g, gi) => `
+    <div class="versions-nav-group">
+      <div class="versions-nav-label">${escapeHtml(g.label)}</div>
+      ${g.versions.map((v, i) => `
+        <a href="#${v.id}"${gi === 0 && i === 0 ? ' class="active"' : ''}>
+          ${escapeHtml(v.number)}
+          <span class="tick">${escapeHtml(badgeLabel(v.badge))}</span>
+        </a>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function renderMain(el, tracks) {
+  const trackOrder = [tracks.sector, tracks.app];
+  el.innerHTML = trackOrder
+    .filter(t => t.versions.length)
+    .map(renderTrack).join('');
+}
+
+function renderTrack(track) {
+  return `
+    <section class="track" id="${track.id}">
+      <header class="track-header">
+        <span class="track-eyebrow">${escapeHtml(track.eyebrow)}</span>
+        <h2 class="track-title">${escapeHtml(track.title)}</h2>
+      </header>
+      ${track.versions.map(renderVersion).join('')}
+    </section>
+  `;
+}
+
+function renderVersion(v) {
+  const dateLine = v.subtitle ? escapeHtml(v.subtitle) : defaultDateLine(v);
+  return `
+    <article class="version" id="${v.id}">
+      <header class="version-header">
+        <h3 class="version-number">${escapeHtml(v.number)}</h3>
+        ${dateLine ? `<span class="version-date">${dateLine}</span>` : ''}
+        ${v.badge ? `<span class="version-badge ${v.badge}">${escapeHtml(badgeLabel(v.badge))}</span>` : ''}
+      </header>
+      ${v.sections.map(renderSection).join('')}
+    </article>
+  `;
+}
+
+function renderSection(s) {
+  return `
+    <section class="section">
+      <h4 class="section-name">${escapeHtml(s.name)}</h4>
+      <div class="entry-list">
+        ${s.entries.map(renderEntry).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderEntry(e) {
+  const tagHtml = e.tag && e.tag !== 'none'
+    ? `<span class="tag ${e.tag}">${escapeHtml(tagCaption(e.tag))}</span>`
+    : `<span class="tag note" style="visibility:hidden">—</span>`;  // keeps grid column
+  return `
+    <div class="entry">
+      ${tagHtml}
+      <div class="body">${renderInline(e.text)}</div>
+    </div>
+  `;
+}
+
+
+/* ── Inline markdown + safety ──────────────────────────────────────── */
+
+// Very small subset: `code`, **bold**, [text](url), bare URLs. Everything
+// else is escaped. Order matters — placeholders keep already-processed
+// spans safe from later replacements.
+function renderInline(text) {
+  // 1. Escape everything up front so nothing user-supplied lands as HTML.
+  let s = escapeHtml(text);
+  const stash = [];
+  const keep = (html) => { stash.push(html); return ` ${stash.length - 1} `; };
+
+  // 2. Inline code first (protects contents from bold/link matching).
+  s = s.replace(/`([^`]+)`/g, (_, code) => keep(`<code>${code}</code>`));
+
+  // 3. Markdown links: [text](href) — href must look like a URL.
+  s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_, txt, url) =>
+    keep(`<a href="${url}" target="_blank" rel="noopener">${txt}</a>`));
+
+  // 4. Bare URLs.
+  s = s.replace(/(?<![">])(https?:\/\/[^\s<]+)/g,
+    url => keep(`<a href="${url}" target="_blank" rel="noopener">${url.replace(/^https?:\/\//, '')}</a>`));
+
+  // 5. Bold.
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+  // 6. Restore stashed HTML fragments.
+  s = s.replace(/ (\d+) /g, (_, i) => stash[+i]);
+  return s;
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+
+/* ── Cosmetic helpers ──────────────────────────────────────────────── */
+
+function tagCaption(tag) {
+  return { added: 'Added', fixed: 'Fixed', changed: 'Changed',
+           removed: 'Removed', note: 'Note' }[tag] || '';
+}
+
+function badgeLabel(badge) {
+  return { latest: 'Latest', beta: 'Beta', app: 'App' }[badge] || '';
+}
+
+function defaultDateLine(v) {
+  // The markdown source doesn't carry dates. Prefer any explicit
+  // subtitle the user wrote after the version number; otherwise leave
+  // the header clean rather than fabricating a date.
+  return '';
+}
+</script>
+
+</body>
+</html>
